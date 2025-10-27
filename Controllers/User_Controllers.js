@@ -77,6 +77,25 @@ class User_Controller {
         }
     }
 
+    async loginUser(req, res) {
+        try {
+            const { identifier, password } = req.body;
+
+            const user = await User_Service.loginUser({ identifier, password });
+
+            res.status(200).json({
+                status: "success",
+                message: "Login successful",
+                data: user
+            });
+        } catch (error) {
+            res.status(400).json({
+                status: "error",
+                message: error.message,
+            });
+        }
+    }
+
 
 
 }

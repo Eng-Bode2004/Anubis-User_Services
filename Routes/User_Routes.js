@@ -11,6 +11,6 @@ const router = express.Router();
 router.post('/register', createUserMiddleware,UserController.createUser);
 router.put('/:userId/assign-role',AssignRoleMiddleware,UserController.AssignRole)
 router.post('/:userId/assign-profile', UserController.assignProfile);
-
+router.post('/login', UserController.loginUser);
 
 module.exports = router;

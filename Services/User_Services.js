@@ -102,6 +102,50 @@ class User_Service {
             throw new Error(error.message || 'Error while assigning profile');
         }
     }
+
+
+    async loginUser(userData) {
+        try {
+            const { identifier, password } = userData;
+
+            // Validate input
+            if (!identifier || !password) {
+                throw new Error('Email/Phone and Password are required');
+            }
+
+            // Determine whether the identifier is an email or phone number
+            const query = identifier.includes('@')
+                ? { email: identifier }
+                : { phone_Number: identifier };
+
+            // Check if user exists
+            const user = await User_Schema.findOne(query);
+            if (!user) {
+                throw new Error('User not found with provided credentials');
+            }
+
+            // Compare passwords
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                throw new Error('Invalid password');
+            }
+
+            // Optional: check if account is active
+            if (user.is_active === false) {
+                throw new Error('Your account is not active');
+            }
+
+            // Return sanitized user (without password)
+            const { password: _, ...userWithoutPassword } = user.toObject();
+
+            return userWithoutPassword;
+        } catch (error) {
+            throw new Error(error.message || 'Error while logging in');
+        }
+    }
+
+
+
 }
 
 module.exports = new User_Service();
