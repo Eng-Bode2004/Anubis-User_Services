@@ -67,6 +67,41 @@ class User_Service {
         }
 
     }
+
+
+    async assignProfile(userId, profileId) {
+        try {
+            // 1️⃣ Check if user exists
+            const existUser = await User_Schema.findById(userId);
+            if (!existUser) {
+                throw new Error('User not found');
+            }
+
+
+            // 3️⃣ Check if this profile already assigned to someone else
+            const profileAlreadyAssigned = await User_Schema.findOne({ Profile: profileId });
+            if (profileAlreadyAssigned) {
+                throw new Error('This profile is already assigned to another user');
+            }
+
+            // 4️⃣ Check if user already has a profile assigned
+            if (existUser.Profile && existUser.Profile.toString() === profileId) {
+                throw new Error('This profile is already assigned to this user');
+            }
+
+            // 5️⃣ Assign profile to user
+            const updatedUser = await User_Schema.findByIdAndUpdate(
+                userId,
+                { $set: { Profile: profileId } },
+                { new: true }
+            )// optional: populate profile details
+
+            return updatedUser;
+
+        } catch (error) {
+            throw new Error(error.message || 'Error while assigning profile');
+        }
+    }
 }
 
 module.exports = new User_Service();

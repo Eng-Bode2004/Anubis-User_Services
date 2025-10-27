@@ -49,6 +49,33 @@ class User_Controller {
         }
     }
 
+    async assignProfile(req, res) {
+        try {
+            const { profileId } = req.body;
+            const { userId } = req.params;
+
+            if (!profileId) {
+                return res.status(400).json({
+                    status: "error",
+                    message: "Profile ID is required in the body",
+                });
+            }
+
+            const updatedUser = await User_Service.assignProfile(userId, profileId);
+
+            res.status(200).json({
+                status: "success",
+                message: "Profile assigned successfully",
+                data: updatedUser,
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: "error",
+                statusCode: 500,
+                error: error.message,
+            });
+        }
+    }
 
 
 
