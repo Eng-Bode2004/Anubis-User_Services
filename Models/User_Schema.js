@@ -7,6 +7,7 @@ const User_Schema = new mongoose.Schema({
         unique:true,
         sparse: true,
         trim: true,
+        partialFilterExpression: { phone_Number: { $type: "string" } },
     },
 
     email:{
@@ -14,6 +15,7 @@ const User_Schema = new mongoose.Schema({
         unique:true,
         sparse: true,
         trim: true,
+        partialFilterExpression: { email: { $type: "string" } },
     },
 
     username:{
