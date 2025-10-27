@@ -127,7 +127,7 @@ class User_Service {
             // Compare passwords
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) {
-                throw new Error('Invalid password');
+                throw new Error('Invalid Identifier password');
             }
 
             // Optional: check if account is active
