@@ -96,6 +96,34 @@ class User_Controller {
         }
     }
 
+    async changeUsername(req, res) {
+        try {
+            const { userId } = req.params;
+            const { newUsername } = req.body;
+
+            if (!newUsername) {
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'New username is required in the request body',
+                });
+            }
+
+            const updatedUser = await User_Service.changeUsername(userId, newUsername);
+
+            res.status(200).json({
+                status: 'success',
+                message: 'Username changed successfully',
+                data: updatedUser,
+            });
+        } catch (error) {
+            res.status(400).json({
+                status: 'error',
+                message: error.message,
+            });
+        }
+    }
+
+
 
 
 }

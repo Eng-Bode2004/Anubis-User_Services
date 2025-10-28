@@ -144,6 +144,42 @@ class User_Service {
         }
     }
 
+    async changeUsername(userId, newUsername) {
+        try {
+            if (!userId) throw new Error('User ID is required');
+            if (!newUsername || typeof newUsername !== 'string')
+                throw new Error('New username is required');
+
+            // Validate username format
+            if (newUsername.length < 7) {
+                throw new Error('Username must be at least 7 characters long.');
+            }
+            const usernameRegex = /^[a-zA-Z0-9_.]+$/;
+            if (!usernameRegex.test(newUsername)) {
+                throw new Error('Username can only contain letters, numbers, underscores, and dots.');
+            }
+
+            // Check if username already exists
+            const existingUser = await User_Schema.findOne({ username: newUsername });
+            if (existingUser) {
+                throw new Error('Username already taken');
+            }
+
+            // Update the username
+            const updatedUser = await User_Schema.findByIdAndUpdate(
+                userId,
+                { $set: { username: newUsername } },
+                { new: true }
+            );
+
+            if (!updatedUser) throw new Error('User not found');
+
+            return updatedUser;
+        } catch (error) {
+            throw new Error(error.message || 'Error while changing username');
+        }
+    }
+
 
 
 }
