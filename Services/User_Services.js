@@ -133,9 +133,6 @@ class User_Service {
             // Remove password and include RoleId
             const { password: _, ...userWithoutPassword } = user.toObject();
 
-            // Add RoleId to response
-            userWithoutPassword.RoleId = user.Role ? user.Role.toString() : null;
-
             return userWithoutPassword;
         } catch (error) {
             throw new Error(error.message || 'Error while logging in');
